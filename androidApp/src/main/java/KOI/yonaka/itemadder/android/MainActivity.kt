@@ -136,7 +136,7 @@ fun Itemform() {
         Button(onClick = {  myVarry = Variation(Ivid, Ivname, Iprice);
             var myHolder = listOf<Variation>(myVarry); myItem =
                 SquareItem(Iid, Iname, Idesc, Iprice, myHolder);
-
+//
         }) {
             Text(text = "Sumbit Item")
 
