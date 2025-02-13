@@ -45,5 +45,9 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.androidx.activity.compose)
     implementation(libs.gson)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.core)    // Ktor core client
+    implementation(libs.ktor.client.okhttp)  // OkHttp engine for Ktor
+
     debugImplementation(libs.compose.ui.tooling)
 }

@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import KOI.yonaka.itemadder.Greeting
 import android.renderscript.Sampler.Value
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -35,7 +36,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.google.gson.Gson
+import io.ktor.client.HttpClient
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import io.ktor.client.*
+import io.ktor.client.call.body
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.http.HttpHeaders
+import io.ktor.http.auth.AuthScheme.Bearer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.util.UUID
+import kotlin.coroutines.coroutineContext
+import androidx.compose.runtime.*
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,11 +73,16 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView() {
+    var mainvis by remember { mutableStateOf(false) }
     TopAppBar(title = { /*TODO*/ })
     Box(modifier = Modifier) {
         SqureType2InputForm()
-        Itemform ()
 
+        var showComposable by remember { mutableStateOf(false) }
+        AnimatedVisibility(visible = showComposable) {
+
+
+        }
 
     }
 
@@ -76,9 +103,13 @@ fun Itemform() {
     var Vprice  by remember { mutableStateOf("") }
     var varHolder: List<Variation>
     var myVarry: Variation
+    var mystring by remember{ mutableStateOf("000")}
     val context = LocalContext.current
     /* need all item properties */
-
+    var showComposable by remember { mutableStateOf(false) }
+    if (showComposable){
+        numata(gstring = mystring)
+    }
 
     /* UI starts here*/
     Spacer(
@@ -160,7 +191,10 @@ fun Itemform() {
             Text(text = "Sumbit Item")
 
         }
-        Button(onClick = { }) {
+
+        Button(onClick = { GlobalScope.launch { var text = ApiCall();  withContext(Dispatchers.Main) {
+            Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+        }}  }) {
 
         }
 
@@ -187,32 +221,57 @@ fun Yeet(myitem: SquareItem): String {
     var feedback = myitem.toString()
     return feedback
 }
+ suspend fun  ApiCall(): String {
+    val client = HttpClient(OkHttp)
+
+     val response: HttpResponse = client.get("https://connect.squareupsandbox.com/v2/catalog/info"){
+         headers{
+             append(HttpHeaders.Authorization, "Bearer EAAAly3sXonq42CFhIpDLYr_VsJquQSKU4T6NCBqoVJk06SqW-w5vqYGtjHEN9jH")
+         }
+     }
+
+      var outter =response.body<String>()
+
+     return outter
+
+
+
+
+
+}
+@Composable
+fun numata(gstring:String){
+    var context = LocalContext.current
+    Toast.makeText(context,gstring,Toast.LENGTH_SHORT).show()
+
+}
 @Composable
 fun SqureType2InputForm() {
     // Top-level ApiResponse field
-    var idempotencyKey by remember { mutableStateOf("") }
+    var idempotencyKey by remember { mutableStateOf("700") }
 
     // ObjectData fields
-    var objectId by remember { mutableStateOf("") }
-    var objectType by remember { mutableStateOf("") }
+    var objectId by remember { mutableStateOf("replaced") }
+    var objectType by remember { mutableStateOf("Item") }
 
     // ItemData fields
-    var abbreviation by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var itemName by remember { mutableStateOf("") }
+    var abbreviation by remember { mutableStateOf("DC") }
+    var description by remember { mutableStateOf("longestice ") }
+    var itemName by remember { mutableStateOf("Shipping service") }
 
     // Variation fields (assuming a single variation for simplicity)
-    var variationId by remember { mutableStateOf("") }
-    var variationType by remember { mutableStateOf("") }
+    var variationId by remember { mutableStateOf("ocean") }
+    var variationType by remember { mutableStateOf("Ocean type") }
 
     // ItemVariationData fields
-    var itemVariationItemId by remember { mutableStateOf("") }
-    var itemVariationName by remember { mutableStateOf("") }
-    var pricingType by remember { mutableStateOf("") }
+    var itemVariationItemId by remember { mutableStateOf("701") }
+    var itemVariationName by remember { mutableStateOf("CruseShip") }
+    var pricingType by remember { mutableStateOf("lit") }
 
     // PriceMoney fields (optional)
-    var amount by remember { mutableStateOf("") }
-    var currency by remember { mutableStateOf("") }
+    var amount by remember { mutableStateOf("300") }
+    var currency by remember { mutableStateOf("USD") }
+    var context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -318,41 +377,21 @@ fun SqureType2InputForm() {
 
         Button(
             onClick = {
-                // When submitting, you might create your data classes like:
-                // val priceMoney = if (amount.isNotBlank() && currency.isNotBlank())
-                //    PriceMoney(amount.toInt(), currency)
-                // else null
-                //
-                // val itemVariationData = ItemVariationData(
-                //    itemId = itemVariationItemId,
-                //    name = itemVariationName,
-                //    pricingType = pricingType,
-                //    priceMoney = priceMoney
-                // )
-                //
-                // val variation = Variation(
-                //    id = variationId,
-                //    type = variationType,
-                //    itemVariationData = itemVariationData
-                // )
-                //
-                // val itemData = ItemData(
-                //    abbreviation = abbreviation,
-                //    description = description,
-                //    name = itemName,
-                //    variations = listOf(variation)
-                // )
-                //
-                // val objectData = ObjectData(
-                //    id = objectId,
-                //    type = objectType,
-                //    itemData = itemData
-                // )
-                //
-                // val apiResponse = ApiResponse(
-                //    idempotencyKey = idempotencyKey,
-                //    objectData = objectData
-                // )
+                var pricy : SqureType2.PriceMoney = SqureType2.PriceMoney(amount.toInt(), "USD")
+                var itemvar: SqureType2.ItemVariationData = SqureType2.ItemVariationData(itemVariationItemId,itemVariationName, pricingType, priceMoney = null)
+                var vary :SqureType2.Variation = SqureType2.Variation(variationId, variationType, itemvar)
+                var lister : List<SqureType2.Variation>  = listOf(vary)
+                var idata : SqureType2.ItemData = SqureType2.ItemData(abbreviation,description,itemName, lister)
+                var obbdata: SqureType2.ObjectData = SqureType2.ObjectData(objectId,objectType,idata)
+                var api =  SqureType2.ApiResponse(UUID.randomUUID().toString(), obbdata)
+
+                var gsonner : Gson = Gson()
+                var Gapi = gsonner.toJson(api)
+
+                Toast.makeText(context,api.objectData.itemData.description ,Toast.LENGTH_LONG).show()
+
+
+
             },
             modifier = Modifier.fillMaxWidth()
         ) {
