@@ -36,6 +36,12 @@ Square already provides official tools for item libraries, inventory tracking, a
 * Understanding of sandbox vs. production environments
 * Mobile tooling concepts for small-business operations
 
+ ## Security Note
+
+This repository does not include API keys or production credentials. Local development requires the developer to create their own Square sandbox credentials and store them in a local, untracked configuration file.
+
+A public demo version can also run using mock inventory JSON without connecting to Square's API.
+
 ## Status
 
 Sandbox portfolio project. This is not intended to replace Square's official dashboard or retail tools. It was built to demonstrate API integration, inventory workflow logic, price-checking concepts, and business systems development.
